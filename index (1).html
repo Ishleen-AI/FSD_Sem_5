@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FSD Experiments</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    animation: {
+                        blob: "blob 7s infinite",
+                        'fade-in-up': 'fadeInUp 0.5s ease-out forwards',
+                    },
+                    keyframes: {
+                        blob: {
+                            "0%": { transform: "translate(0px, 0px) scale(1)" },
+                            "33%": { transform: "translate(30px, -50px) scale(1.1)" },
+                            "66%": { transform: "translate(-20px, 20px) scale(0.9)" },
+                            "100%": { transform: "translate(0px, 0px) scale(1)" },
+                        },
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    },
+                },
+            },
+        }
+    </script>
+
+    <style>
+        body {
+            /* Smooth background transition for theme switch */
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 4px;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #475569; 
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .dark .glass-nav {
+            background: rgba(15, 23, 42, 0.85);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-200 flex flex-col min-h-screen selection:bg-indigo-500 selection:text-white">
+
+    <!-- Navbar -->
+    <nav class="glass-nav border-b border-slate-200 dark:border-slate-800 sticky top-0 z-50 transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <!-- Logo Area -->
+                <div class="flex items-center gap-3">
+                    <div class="h-10 w-10 overflow-hidden rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+                        <img src="image_00c5ac.png" alt="Logo" class="h-full w-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+                        <span style="display:none" class="text-white font-bold text-lg">P</span>
+                    </div>
+                    <div>
+                        <span class="font-bold text-xl tracking-tight text-slate-900 dark:text-white">FSD Experiments</span>
+                        <div class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                            Name: Ishleen Lamba &nbsp;|&nbsp; UID: 24BAI70262 &nbsp;|&nbsp; Section: 24AML 7A
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Side Actions -->
+                <div class="flex items-center gap-4">
+                    <span class="text-sm text-slate-500 dark:text-slate-400 hidden sm:block font-medium">Experiment Index</span>
+                    
+                    <!-- Theme Toggle Button -->
+                    <button id="themeToggle" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-indigo-100 dark:hover:bg-indigo-900/30 hover:text-indigo-600 dark:hover:text-indigo-400 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <!-- Sun Icon -->
+                        <svg id="sunIcon" class="w-5 h-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg>
+                        <!-- Moon Icon -->
+                        <svg id="moonIcon" class="w-5 h-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full relative z-0">
+
+        <!-- Background Decor -->
+        <div class="fixed top-20 left-0 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob dark:hidden -z-10"></div>
+        <div class="fixed top-20 right-0 w-72 h-72 bg-indigo-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000 dark:hidden -z-10"></div>
+        
+        <!-- Dark Mode Background Decor (Glows) -->
+        <div class="fixed top-40 left-20 w-72 h-72 bg-indigo-900/30 rounded-full filter blur-[100px] opacity-40 hidden dark:block -z-10"></div>
+        <div class="fixed bottom-20 right-20 w-72 h-72 bg-purple-900/30 rounded-full filter blur-[100px] opacity-40 hidden dark:block -z-10"></div>
+
+        <!-- Student Details Section -->
+        <div class="max-w-4xl mx-auto mb-16 animate-fade-in-up" style="animation-delay: 0.1s;">
+            <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-xl shadow-slate-200/50 dark:shadow-black/30 border border-slate-200 dark:border-slate-800 relative overflow-hidden transition-colors duration-300">
+                <!-- Decorative Top Border -->
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"></div>
+
+                <div class="relative flex flex-col md:flex-row justify-between items-center gap-6 text-center md:text-left">
+                    <div>
+                        <h2 class="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400">Student Profile</h2>
+                        <p class="text-slate-500 dark:text-slate-400 mt-2 font-medium">Course Submission Dashboard</p>
+                    </div>
+                    
+                    <div class="flex flex-col sm:flex-row gap-4 w-full md:w-auto justify-center bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-100 dark:border-slate-700/50">
+                        <div class="px-3">
+                            <span class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Name</span>
+                            <span class="text-base font-semibold text-slate-900 dark:text-white">Ishleen Lamba</span>
+                        </div>
+                        <div class="px-3 border-t sm:border-t-0 sm:border-l border-slate-200 dark:border-slate-700 pt-2 sm:pt-0">
+                            <span class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Class</span>
+                            <span class="text-base font-semibold text-slate-900 dark:text-white">24AML 7A</span>
+                        </div>
+                        <div class="px-3 border-t sm:border-t-0 sm:border-l border-slate-200 dark:border-slate-700 pt-2 sm:pt-0">
+                            <span class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">UID</span>
+                            <span class="text-base font-mono font-bold text-indigo-600 dark:text-indigo-400">24BAI70262</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Hero Section -->
+        <div class="text-center mb-12 animate-fade-in-up" style="animation-delay: 0.2s;">
+            <h1 class="text-3xl sm:text-5xl font-extrabold text-slate-900 dark:text-white mb-4 tracking-tight">
+                Welcome to your <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400">Dashboard</span>
+            </h1>
+            <p class="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed">
+                Access your experiment files below. Use the search bar to quickly filter through your submissions.
+            </p>
+        </div>
+
+        <!-- Search / Filter -->
+        <div class="max-w-xl mx-auto mb-12 relative animate-fade-in-up" style="animation-delay: 0.3s;">
+            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <svg class="h-5 w-5 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+            </div>
+            <input type="text" id="searchInput" 
+                   class="block w-full pl-11 pr-4 py-4 border border-slate-200 dark:border-slate-700 rounded-2xl leading-5 bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition duration-300 ease-in-out shadow-lg shadow-slate-200/50 dark:shadow-none"
+                   placeholder="Search for experiments (e.g., '1.1')...">
+        </div>
+
+        <!-- Grid of Files -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="fileGrid">
+
+            <a href="run-experiment.html?file=FSD_Exp_1.tsx" class="file-card animate-fade-in-up group relative block bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-indigo-500/10 hover:-translate-y-1 dark:hover:border-indigo-500/30">
+                <div class="absolute inset-0 bg-gradient-to-br from-transparent to-indigo-50 dark:to-indigo-900/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div class="relative z-10">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="w-12 h-12 bg-blue-50 dark:bg-blue-900/30 rounded-xl flex items-center justify-center text-blue-600 dark:text-blue-400 transition-colors">
+                            <span class="text-lg font-bold">1</span>
+                        </div>
+                        <div class="p-2 bg-slate-50 dark:bg-slate-800 rounded-lg text-slate-400 group-hover:text-indigo-500 transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                        </div>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-1 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">FSD Experiment 1</h3>
+                    <div class="mt-6 flex items-center text-sm font-semibold text-indigo-600 dark:text-indigo-400 opacity-0 transform translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">Open File <span class="ml-2">&rarr;</span></div>
+                </div>
+            </a>
+
+            <a href="run-experiment.html?file=FSD_Exp_1.2.tsx" class="file-card animate-fade-in-up group relative block bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-indigo-500/10 hover:-translate-y-1 dark:hover:border-indigo-500/30" style="animation-delay: 0.1s;">
+                <div class="absolute inset-0 bg-gradient-to-br from-transparent to-indigo-50 dark:to-indigo-900/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div class="relative z-10">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="w-12 h-12 bg-blue-50 dark:bg-blue-900/30 rounded-xl flex items-center justify-center text-blue-600 dark:text-blue-400 transition-colors">
+                            <span class="text-lg font-bold">1.2</span>
+                        </div>
+                        <div class="p-2 bg-slate-50 dark:bg-slate-800 rounded-lg text-slate-400 group-hover:text-indigo-500 transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                        </div>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-1 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">FSD Experiment 1.2</h3>
+                    <div class="mt-6 flex items-center text-sm font-semibold text-indigo-600 dark:text-indigo-400 opacity-0 transform translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">Open File <span class="ml-2">&rarr;</span></div>
+                </div>
+            </a>
+
+            <a href="run-experiment.html?file=FSD_Exp_2.tsx" class="file-card animate-fade-in-up group relative block bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-emerald-500/10 hover:-translate-y-1 dark:hover:border-emerald-500/30" style="animation-delay: 0.15s;">
+                <div class="absolute inset-0 bg-gradient-to-br from-transparent to-emerald-50 dark:to-emerald-900/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div class="relative z-10">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="w-12 h-12 bg-emerald-50 dark:bg-emerald-900/30 rounded-xl flex items-center justify-center text-emerald-600 dark:text-emerald-400 transition-colors">
+                            <span class="text-lg font-bold">2</span>
+                        </div>
+                        <div class="p-2 bg-slate-50 dark:bg-slate-800 rounded-lg text-slate-400 group-hover:text-emerald-500 transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                        </div>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-1 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">FSD Experiment 2</h3>
+                    <div class="mt-6 flex items-center text-sm font-semibold text-emerald-600 dark:text-emerald-400 opacity-0 transform translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">Open File <span class="ml-2">&rarr;</span></div>
+                </div>
+            </a>
+
+            <a href="run-experiment.html?file=FSD_Exp_2.2.tsx" class="file-card animate-fade-in-up group relative block bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-emerald-500/10 hover:-translate-y-1 dark:hover:border-emerald-500/30" style="animation-delay: 0.2s;">
+                <div class="absolute inset-0 bg-gradient-to-br from-transparent to-emerald-50 dark:to-emerald-900/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div class="relative z-10">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="w-12 h-12 bg-emerald-50 dark:bg-emerald-900/30 rounded-xl flex items-center justify-center text-emerald-600 dark:text-emerald-400 transition-colors">
+                            <span class="text-lg font-bold">2.2</span>
+                        </div>
+                        <div class="p-2 bg-slate-50 dark:bg-slate-800 rounded-lg text-slate-400 group-hover:text-emerald-500 transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                        </div>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-1 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">FSD Experiment 2.2</h3>
+                    <div class="mt-6 flex items-center text-sm font-semibold text-emerald-600 dark:text-emerald-400 opacity-0 transform translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">Open File <span class="ml-2">&rarr;</span></div>
+                </div>
+            </a>
+
+            <a href="run-experiment.html?file=FSD_Exp_3.tsx" class="file-card animate-fade-in-up group relative block bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-pink-500/10 hover:-translate-y-1 dark:hover:border-pink-500/30" style="animation-delay: 0.25s;">
+                <div class="absolute inset-0 bg-gradient-to-br from-transparent to-pink-50 dark:to-pink-900/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div class="relative z-10">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="w-12 h-12 bg-pink-50 dark:bg-pink-900/30 rounded-xl flex items-center justify-center text-pink-600 dark:text-pink-400 transition-colors">
+                            <span class="text-lg font-bold">3</span>
+                        </div>
+                        <div class="p-2 bg-slate-50 dark:bg-slate-800 rounded-lg text-slate-400 group-hover:text-pink-500 transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                        </div>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-1 group-hover:text-pink-600 dark:group-hover:text-pink-400 transition-colors">FSD Experiment 3</h3>
+                    <div class="mt-6 flex items-center text-sm font-semibold text-pink-600 dark:text-pink-400 opacity-0 transform translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">Open File <span class="ml-2">&rarr;</span></div>
+                </div>
+            </a>
+
+            <a href="run-experiment.html?file=FSD_Exp_3.2.tsx" class="file-card animate-fade-in-up group relative block bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-pink-500/10 hover:-translate-y-1 dark:hover:border-pink-500/30" style="animation-delay: 0.3s;">
+                <div class="absolute inset-0 bg-gradient-to-br from-transparent to-pink-50 dark:to-pink-900/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div class="relative z-10">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="w-12 h-12 bg-pink-50 dark:bg-pink-900/30 rounded-xl flex items-center justify-center text-pink-600 dark:text-pink-400 transition-colors">
+                            <span class="text-lg font-bold">3.2</span>
+                        </div>
+                        <div class="p-2 bg-slate-50 dark:bg-slate-800 rounded-lg text-slate-400 group-hover:text-pink-500 transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                        </div>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-1 group-hover:text-pink-600 dark:group-hover:text-pink-400 transition-colors">FSD Experiment 3.2</h3>
+                    <div class="mt-6 flex items-center text-sm font-semibold text-pink-600 dark:text-pink-400 opacity-0 transform translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">Open File <span class="ml-2">&rarr;</span></div>
+                </div>
+            </a>
+
+            <a href="run-experiment.html?file=FSD_Exp_4.tsx" class="file-card animate-fade-in-up group relative block bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-violet-500/10 hover:-translate-y-1 dark:hover:border-violet-500/30" style="animation-delay: 0.35s;">
+                <div class="absolute inset-0 bg-gradient-to-br from-transparent to-violet-50 dark:to-violet-900/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div class="relative z-10">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="w-12 h-12 bg-violet-50 dark:bg-violet-900/30 rounded-xl flex items-center justify-center text-violet-600 dark:text-violet-400 transition-colors">
+                            <span class="text-lg font-bold">4</span>
+                        </div>
+                        <div class="p-2 bg-slate-50 dark:bg-slate-800 rounded-lg text-slate-400 group-hover:text-violet-500 transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                        </div>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-1 group-hover:text-violet-600 dark:group-hover:text-violet-400 transition-colors">FSD Experiment 4</h3>
+                    <div class="mt-6 flex items-center text-sm font-semibold text-violet-600 dark:text-violet-400 opacity-0 transform translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">Open File <span class="ml-2">&rarr;</span></div>
+                </div>
+            </a>
+
+            <a href="run-experiment.html?file=FSD_Exp_4.2.tsx" class="file-card animate-fade-in-up group relative block bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-violet-500/10 hover:-translate-y-1 dark:hover:border-violet-500/30" style="animation-delay: 0.4s;">
+                <div class="absolute inset-0 bg-gradient-to-br from-transparent to-violet-50 dark:to-violet-900/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div class="relative z-10">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="w-12 h-12 bg-violet-50 dark:bg-violet-900/30 rounded-xl flex items-center justify-center text-violet-600 dark:text-violet-400 transition-colors">
+                            <span class="text-lg font-bold">4.2</span>
+                        </div>
+                        <div class="p-2 bg-slate-50 dark:bg-slate-800 rounded-lg text-slate-400 group-hover:text-violet-500 transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                        </div>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-1 group-hover:text-violet-600 dark:group-hover:text-violet-400 transition-colors">FSD Experiment 4.2</h3>
+                    <div class="mt-6 flex items-center text-sm font-semibold text-violet-600 dark:text-violet-400 opacity-0 transform translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">Open File <span class="ml-2">&rarr;</span></div>
+                </div>
+            </a>
+
+        </div>
+
+        <!-- No Results Message -->
+        <div id="noResults" class="hidden text-center py-20 animate-fade-in-up">
+            <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-slate-100 dark:bg-slate-800 mb-4 transition-colors">
+                <svg class="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </div>
+            <h3 class="text-xl font-medium text-slate-900 dark:text-white">No files found</h3>
+            <p class="text-slate-500 dark:text-slate-400 mt-2">Try adjusting your search terms to find what you're looking for.</p>
+        </div>
+
+    </main>
+
+    <footer class="bg-white/80 dark:bg-slate-900/80 border-t border-slate-200 dark:border-slate-800 py-8 backdrop-blur-sm transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <p class="text-slate-500 dark:text-slate-400 text-sm font-medium"> Project Directory. All rights reserved.</p>
+            <div class="flex items-center gap-2">
+                <div class="h-2 w-2 rounded-full bg-green-500 animate-pulse"></div>
+                <span class="text-slate-400 text-sm font-medium">System Online</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // --- Dark Mode Logic ---
+        const themeToggleBtn = document.getElementById('themeToggle');
+        const sunIcon = document.getElementById('sunIcon');
+        const moonIcon = document.getElementById('moonIcon');
+
+        // Check local storage or system preference
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+            sunIcon.classList.remove('hidden');
+        } else {
+            document.documentElement.classList.remove('dark');
+            moonIcon.classList.remove('hidden');
+        }
+
+        themeToggleBtn.addEventListener('click', () => {
+            // Toggle class
+            document.documentElement.classList.toggle('dark');
+            
+            // Toggle Icons
+            sunIcon.classList.toggle('hidden');
+            moonIcon.classList.toggle('hidden');
+
+            // Save preference
+            if (document.documentElement.classList.contains('dark')) {
+                localStorage.theme = 'dark';
+            } else {
+                localStorage.theme = 'light';
+            }
+        });
+
+        // --- Search Logic ---
+        document.getElementById('searchInput').addEventListener('keyup', function(e) {
+            const searchValue = e.target.value.toLowerCase();
+            const cards = document.querySelectorAll('.file-card');
+            let hasVisibleCards = false;
+
+            cards.forEach(card => {
+                const title = card.querySelector('h3').textContent.toLowerCase();
+                const anchorText = card.textContent.toLowerCase();
+                const matches = title.includes(searchValue) || anchorText.includes(searchValue);
+
+                card.style.display = matches ? 'block' : 'none';
+                if (matches) {
+                    card.style.opacity = '1';
+                    hasVisibleCards = true;
+                }
+            });
+
+            const noResults = document.getElementById('noResults');
+            if (!hasVisibleCards) {
+                noResults.classList.remove('hidden');
+            } else {
+                noResults.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+
+</html>
